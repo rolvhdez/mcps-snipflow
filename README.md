@@ -12,7 +12,6 @@ A protocol to run a FGWAS with imputations according to Young, *et al*. ([2022](
     export baseline="/path/to/your/baseline.csv"
     export kinship="/path/to/your/kinship.seg"
     export pcs="/path/to/your/pcs.txt"
-    export chr_range="1 5 8-10 22" # string autosomal chromosomes to run
     ```
 
     >**Important**
@@ -25,13 +24,13 @@ A protocol to run a FGWAS with imputations according to Young, *et al*. ([2022](
     python resources/build_inputs.py --baseline $baseline --kinship $kinship --pcs $pcs --outDir $out_dir
     ```
 
-3. (Optional, and not recommended) Run the IBD segments inference. Just run it if you are doing tests, you are using special data or forgot to log it. It will take a while, so why not go for a coffee...
+3. (Optional, and not recommended yet) Run the IBD segments inference. Just run it if you are doing tests, you are using special data or forgot to log it. It will take a while, so why not go for a coffee...
 
 	```shell
 	./run_ibd.sh
 	```
 
-4. (Optional, and not recommended) Run the Mendelian Imputation. Same as above.
+4. (Optional, and not recommended yet) Run the Mendelian Imputation. Same as above.
 
 	```shell
 	./run_imputation.sh
@@ -40,7 +39,7 @@ A protocol to run a FGWAS with imputations according to Young, *et al*. ([2022](
 6. Run the FGWAS model you want to use. Provide a number for the phenotype you want to run the FGWAS on. For example, a FGWAS with the *robust estimator* (Guan *et al.*, 2025) on BMI (125) would be:
 
     ```shell
-    ./fgwas/robust.sh 125
+    ./run_fgwas.sh 125 "robust"
     ```
 
 ## Set up the environment
