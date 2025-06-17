@@ -14,6 +14,6 @@ mkdir -p "${out_dir%/}/sumstats/"
         --chr_range "$2" \
         --grm "${kinship}" \
         --sparse_thresh 0.05 \
-        --cpu 8 --threads 2 \
+        --cpu $3 --threads $4 --batch_size $5 \
         --out "${out_dir%/}/sumstats/chr_@.regular_imputed"
 } 2>&1 | tee "${out_dir%/}/sumstats/regular_imputed_fgwas_$2.log"

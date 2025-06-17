@@ -5,22 +5,47 @@ pheno_id=$1
 estimator=$2
 
 # cycle for every 3 autosomes in decreasing order
-i=22 # last autosome
+chr_i=22
 
-# Define out_dir if not already set
-out_dir=${out_dir:-.}
+while [[ chr_i -gt 0 ]]; do
 
-while [[ i -gt 0 ]]; do
-	j=$(( i-2 ))
-	if [ $j -lt 1 ]; then 
-		# last chromosome is run separately
-		./fgwas/"$estimator".sh $pheno_id $i
-		exit 0
+	chr_j=$((chr_i-2))
+
+	# Compute total number of variants to be processed
+	total_variants=0
+	for x in $(seq $chr_i -1 $chr_j); do
+		variants=$(awk -v chr="$x" '$1 == chr' "${bed}.bim" | wc -l)
+		total_variants=$((total_variants+variants))
+	done
+
+	# Change computing requirements to avoid memory issues
+	if [[ $total_variants -le 35000 ]]; then
+		cpu=8
+		threads=2
+		batch_size=100000
+	elif [[ $total_variants -le 70000 ]]; then
+		cpu=6
+		threads=2
+		batch_size=50000
 	else
-		# run the FGWAS in parallel
+		cpu=4
+		threads=2
+		batch_size=25000
+	fi
+
+	# Execute the FGWAS script
+	if [[ $chr_j -gt 0 ]]; then
 		parallel \
 			--joblog "${out_dir%/}/sumstats/"$estimator"_joblog_$j-$i.log" \
-			-j 3 ./fgwas/"$estimator".sh {1} {2} ::: $pheno_id ::: $(seq $i -1 $j)
-		i=$((j-1))
+			-j 3 ./fgwas/"$estimator".sh {1} {2} {3} {4} {5} \
+			::: $pheno_id \
+			::: $(seq $chr_i -1 $chr_j) \
+			::: $cpu \
+			::: $threads \
+			::: $batch_size
+		chr_i=$((chr_j-1))
+	else
+		./fgwas/"estimator".sh $pheno_id $chr_i $cpu $threads $batch_size
+		exit 0
 	fi
 done
