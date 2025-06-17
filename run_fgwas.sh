@@ -5,7 +5,7 @@ pheno_id=$1
 estimator=$2
 
 # Start and end chromosomes
-chr_i=7
+chr_i=22
 min_chr=1
 
 # Computational power
@@ -43,7 +43,7 @@ while [[ chr_i -ge $min_chr ]]; do
 		threads=2
 		batch_size=100000
 		#echo "${chr_i}  ${n_vars} ${cpu} ${threads} ${batch_size}"
-		./fgwas/"estimator".sh $pheno_id $chr_i $cpu $threads $batch_size
+		./fgwas/"$estimator".sh $pheno_id $chr_i $cpu $threads $batch_size
 	fi
 	chr_i=$((chr_j-1))
 done
