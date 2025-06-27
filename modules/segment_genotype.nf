@@ -1,18 +1,18 @@
 process segmentGenotype {
-//    publishDir "${params.outDir}/chr_segments/", mode: 'copy'
-    
+    containerOptions '--user root'
     input:
-    path bed
-    path bim
-    path fam
-    val chr
-    
+        path bed
+        path bim
+        path fam
     output:
-    file "${bed.baseName}_chr$chr.{bed,bim,fam}"
-    
+        file "${bed.BaseName}_chr*.{bed,bim,fam}"
     script:
     """
     #!/bin/bash
-    plink --bed "$bed" --bim "$bim" --fam "$fam" --chr $chr --make-bed --out "${bed.baseName}_chr$chr"
+    for i in {1..22}; do
+        plink2 --bed "$bed" --bim "$bim" --fam "$fam" \
+            --chr \$i --make-bed \
+            --out "${bed.baseName}_chr\$i"
+    done
     """
 }

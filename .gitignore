@@ -1,4 +1,8 @@
 .vscode/
+params.json
+work/
+.nextflow*
+templates/__init__.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,0 +1,129 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://raw.githubusercontent.com///nextflow_schema.json",
+    "title": " pipeline parameters",
+    "description": "",
+    "type": "object",
+    "properties": {
+        "outDir": {
+            "type": "string",
+            "default": "./results",
+            "description": "Output directory",
+            "format": "directory-path",
+            "help_text": "Directory to ouput analysis' results.",
+            "hidden": true
+        }
+    },
+    "$defs": {
+        "genotype_files": {
+            "title": "Genotype files",
+            "type": "object",
+            "description": "Plink genotype files.",
+            "default": "",
+            "properties": {
+                "bed": {
+                    "type": "string",
+                    "description": "Plink file (.bed)",
+                    "format": "file-path",
+                    "pattern": "^*\\.bed$",
+                    "help_text": ""
+                },
+                "bim": {
+                    "type": "string",
+                    "description": "Plink file (.bim)",
+                    "format": "file-path",
+                    "pattern": "^*\\.bim$",
+                    "help_text": ""
+                },
+                "fam": {
+                    "type": "string",
+                    "description": "Plink file (.fam)",
+                    "format": "file-path",
+                    "pattern": "^*\\.fam$",
+                    "help_text": ""
+                }
+            },
+            "required": [
+                "bed",
+                "bim",
+                "fam"
+            ]
+        },
+        "phenotype_files": {
+            "title": "Phenotype files",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "baseline": {
+                    "type": "string",
+                    "description": "Baseline survey",
+                    "format": "file-path",
+                    "pattern": "^*\\.csv$",
+                    "help_text": "You *Baseline survey* file with the individuals you want to run the analysis with."
+                },
+                "kinship": {
+                    "type": "string",
+                    "description": "Kinship (IBD inference)",
+                    "format": "file-path",
+                    "pattern": "^*\\.seg$",
+                    "help_text": "[KING](https://www.kingrelatedness.com/) generated file with kinship information for all individuals. At least 4th degree is recommended."
+                },
+                "pcs": {
+                    "type": "string",
+                    "description": "Principal components (PCs)",
+                    "format": "file-path",
+                    "pattern": "^*\\.txt$",
+                    "help_text": "Principal components (PCs) file. By default, SNIPflow takes the first 7 PCs."
+                }
+            },
+            "required": [
+                "baseline",
+                "kinship",
+                "pcs"
+            ]
+        },
+        "user_inputs": {
+            "title": "User inputs",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "phenoIndex": {
+                    "type": "string",
+                    "description": "Phenotype index",
+                    "default": "1",
+                    "help_text": "Phenotype index to run the analysis for. Defaults to ''. A dictionary is provided here: "
+                },
+                "chr_range": {
+                    "type": "string",
+                    "default": "1-22",
+                    "description": "Chromosome Range",
+                    "help_text": "Autosomes to run the analysis for. Should be written in spaces and hyphens (ie. '1 6 7-13 22'). Defaults to all ('1-22')."
+                },
+                "estimator": {
+                    "type": "string",
+                    "default": "regular",
+                    "description": "FGWAS Estimator",
+                    "help_text": "FGWAS analysis ([snipar (v0.0.22)](https://github.com/AlexTISYoung/snipar/tree/v0.0.22)) to be executed."
+                }
+            },
+            "required": [
+                "phenoIndex",
+                "chr_range",
+                "estimator"
+            ]
+        }
+    },
+    "allOf": [
+        {
+            "$ref": "#/$defs/genotype_files"
+        },
+        {
+            "$ref": "#/$defs/phenotype_files"
+        },
+        {
+            "$ref": "#/$defs/user_inputs"
+        }
+    ]
+}

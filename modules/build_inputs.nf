@@ -1,24 +1,36 @@
-process buildInputs {
-    container 'your-docker-image'
-    publishDir "${params.outDir}", mode: 'copy'
-    
+process makeAgeSexKinship {
+    containerOptions '--user root'
     input:
-    path baseline
-    path kinship
-    path pcs
-    val outDir
-    
+        path baseline
+        path kinship
     output:
-    path("${outDir}/pedigree.txt"), emit: pedigree
-    path("${outDir}/phenotype.txt"), emit: phenotype
-    path("${outDir}/covariates.txt"), emit: covariates
-    
-    script:
-    """
-    python3 resources/build_inputs.py \
-        --baseline $baseline \
-        --kinship $kinship \
-        --pcs $pcs \
-        --outDir $outDir
-    """
+        path "agesex.csv", emit: "agesex"
+        path "kinship.csv", emit: "kinship"
+    script: template 'agesex-kinship.py'
+}
+
+process makePedigree {
+    publishDir "${params.outDir}", mode: 'copy'
+    containerOptions '--user root'
+    input:
+        path agesex
+        path kinship
+    output:
+        path "pedigree.txt", emit: "pedigree"
+    script: template 'pedigree.py'
+}
+
+process makePhenoCovars {
+    publishDir "${params.outDir}", mode: 'copy'
+    containerOptions '--user root'
+
+    input:
+        path baseline
+        path kinship
+        path pedigree
+        path pcs
+    output:
+        path "phenotype.txt", emit: "phenotype"
+        path "covariates.txt", emit: "covariates"
+    script: template 'pheno-covars.py'
 }

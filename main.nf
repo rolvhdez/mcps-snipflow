@@ -1,7 +1,12 @@
 #!/usr/bin/env nextflow
 
-include { buildInputs } from './modules/build_inputs'
+// Input preparation
+include { makeAgeSexKinship } from './modules/build_inputs'
+include { makePedigree } from './modules/build_inputs'
+include { makePhenoCovars } from './modules/build_inputs'
 include { segmentGenotype } from './modules/segment_genotype'
+
+// snipar
 include { runFgwas } from './modules/run_fgwas'
 
 def expandRanges(String str) {
@@ -20,7 +25,29 @@ def expandRanges(String str) {
 }
 
 workflow {
-
+    // 01: Creates the input files for snipar using the MCPS data that is available.
+    makeAgeSexKinship(
+        params.baseline,
+        params.kinship
+    )
+    makePedigree(
+        makeAgeSexKinship.output.agesex,
+        makeAgeSexKinship.output.kinship
+    )
+    makePhenoCovars(
+        params.baseline,
+        params.kinship,
+        makePedigree.output.pedigree,
+        params.pcs
+    )
+    
+    // 02. For snipar to work, genotypes have to be separated by individual chromosomes
+    segmentGenotype(
+        params.bed,
+        params.bim,
+        params.fam
+    )
+    
     // Make a list of the chromosomes to use
     Channel
         .of(expandRanges(params.chr_range.toString()))
@@ -28,29 +55,15 @@ workflow {
         .flatten()
         .set { chr_channel }
 
-    // 01: Creates the input files for snipar using the MCPS
-    // data that is available.
-    buildInputs(
-        params.baseline,
-        params.kinship,
-        params.pcs,
-        params.outDir
-    )
-    
-    // 02. For snipar to work, genotypes have to be separated by
-    // individual chromosomes
-    segmentGenotype(
-        params.bed,
-        params.bim,
-        params.fam,
-        chr_channel
-    )
-    
-    // Then run FGWAS after both complete
+    // 03. Run FGWAS after both complete
     runFgwas(
-        params.phenoIndex,
         params.estimator,
-        params.kinship,
-        params.outDir
+        makePhenoCovars.output.phenotype,
+        params.phenoIndex,
+        segmentGenotype.output,
+        makePedigree.output.pedigree,
+        makePhenoCovars.output.covariates,
+        params.chr_range,
+        params.kinship
     )
 }
