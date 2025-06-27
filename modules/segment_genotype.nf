@@ -10,7 +10,7 @@ process segmentGenotype {
     """
     #!/bin/bash
     for i in {1..22}; do
-        plink2 --bed "$bed" --bim "$bim" --fam "$fam" \
+        plink --bed "$bed" --bim "$bim" --fam "$fam" \
             --chr \$i --make-bed \
             --out "chr_\$i"
     done

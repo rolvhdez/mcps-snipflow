@@ -1,0 +1,21 @@
+FROM amd64/python:3.9.9-slim-buster
+
+USER root
+
+# Install system dependencies
+RUN apt-get update -y
+RUN apt-get install build-essential wget unzip git procps grep coreutils sed -y
+RUN apt-get clean
+RUN rm -rf /var/lib/apt/lists/*
+
+# Install PLINK v1.9
+ENV PLINK_DIR="/bin/plink"
+RUN mkdir -p ${PLINK_DIR} && \
+    wget https://s3.amazonaws.com/plink1-assets/plink_linux_x86_64_20241022.zip -O "${PLINK_DIR}/plink.zip" && \
+    unzip "${PLINK_DIR}/plink.zip" -d "${PLINK_DIR}" && \
+    rm "${PLINK_DIR}/plink.zip" && \
+    chmod +x "${PLINK_DIR}/plink"
+ENV PATH="${PLINK_DIR}:${PATH}"
+
+# Install Python packages
+RUN pip install snipar==0.0.22 dxpy
