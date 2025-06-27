@@ -6,23 +6,8 @@ include { makePedigree } from './modules/build_inputs'
 include { makePhenoCovars } from './modules/build_inputs'
 include { segmentGenotype } from './modules/segment_genotype'
 
-// snipar
+// SNIPAR
 include { runFgwas } from './modules/run_fgwas'
-
-def expandRanges(String str) {
-    // Split the CHR_RANGE string into individual elements
-    def elements = str.split()
-    def chrom = []
-        elements.each { element ->
-            if (element.contains('-')) {
-                def (start, end) = element.split('-').collect { it as int }
-                chrom.addAll(start..end)
-            } else {
-                chrom.add(element as int)
-            }
-        }
-    return chrom
-}
 
 workflow {
     // 01: Creates the input files for snipar using the MCPS data that is available.
@@ -47,15 +32,8 @@ workflow {
         params.bim,
         params.fam
     )
-    
-    // Make a list of the chromosomes to use
-    Channel
-        .of(expandRanges(params.chr_range.toString()))
-        .ifEmpty { error "No chromosomes found in the range ${params.chr_range}" }
-        .flatten()
-        .set { chr_channel }
 
-    // 03. Run FGWAS after both complete
+    // 03. Run FGWAS according to selected estimator
     runFgwas(
         params.estimator,
         makePhenoCovars.output.phenotype,

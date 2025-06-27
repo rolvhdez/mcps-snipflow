@@ -11,7 +11,7 @@ process runFgwas {
         path genotypes
         path pedigree
         path covariates
-        val chr_range
+        val chr
         path kinship
 
     output:

@@ -5,8 +5,8 @@ gwas.py \
     --bed "chr_@" \
     --pedigree "${pedigree}" \
     --covar "${covariates}" \
-    --chr_range "${chr_range}" \
+    --chr_range "${chr}" \
     --grm "${kinship}" \
     --sparse_thresh 0.05 \
-    --cpu 8 --threads 2 --batch_size 50000 \
+    --cpu 32 --threads 2 --batch_size 150000 \
     --out "chr_@.regular"
