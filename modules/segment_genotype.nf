@@ -5,14 +5,14 @@ process segmentGenotype {
         path bim
         path fam
     output:
-        file "${bed.BaseName}_chr*.{bed,bim,fam}"
+        path "chr_*.{bed,bim,fam}"
     script:
     """
     #!/bin/bash
     for i in {1..22}; do
         plink2 --bed "$bed" --bim "$bim" --fam "$fam" \
             --chr \$i --make-bed \
-            --out "${bed.baseName}_chr\$i"
+            --out "chr_\$i"
     done
     """
 }

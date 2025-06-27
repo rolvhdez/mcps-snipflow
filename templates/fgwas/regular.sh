@@ -1,9 +1,8 @@
 #!/bin/bash
-bedfile=\$( basename ${bed} .bed )
 gwas.py \
     "${phenotype}" \
     --phen_index ${phenoIndex} \
-    --bed "\$bedfile" \
+    --bed "chr_@" \
     --pedigree "${pedigree}" \
     --covar "${covariates}" \
     --chr_range "${chr_range}" \
