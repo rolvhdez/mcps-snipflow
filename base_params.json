@@ -1,0 +1,10 @@
+{
+   "bed": "/home/rob/Documents/data/genotypes/revised_maf01.bed",
+   "bim": "/home/rob/Documents/data/genotypes/revised_maf01.bim",
+   "fam": "/home/rob/Documents/data/genotypes/revised_maf01.fam",
+   "baseline": "/home/rob/Documents/results/baseline-tests/baseline-test-50.csv",
+   "kinship": "/home/rob/Documents/data/king_ibdseg_4th.seg",
+   "pcs": "/home/rob/Documents/data/pcs_unrelated_maf05.txt",
+   "chr_range": "22",
+   "estimator": "regular"
+}
