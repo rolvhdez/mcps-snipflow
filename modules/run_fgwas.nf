@@ -1,5 +1,5 @@
 process runFgwas {
-    publishDir "${params.outDir}/sumstats/", mode: 'copy'
+    publishDir "${params.outDir}/${form_id}-sumstats/", mode: 'copy'
     containerOptions '--user root'
     input:
         // Selection of script
@@ -19,6 +19,7 @@ process runFgwas {
         path "chr_*.*.hdf5", emit: "hdf5"
 
     script: 
+        form_id = phenoIndex.toString().padLeft(3, '0')
         if ( estimator == 'regular' )
             // Parent-offspring trios and Sibling Differences (no imputation)
             template 'fgwas/regular.sh'
