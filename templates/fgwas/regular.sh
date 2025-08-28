@@ -1,4 +1,9 @@
 #!/bin/bash
+
+# Backup the script used
+dx upload "./regular.sh" --path "$DX_PROJECT_CONTEXT_ID:${dx_outdir}" 
+
+# Run the FGWAS analysis
 gwas.py \
     "${phenotype}" \
     --phen_index ${phenoIndex} \
