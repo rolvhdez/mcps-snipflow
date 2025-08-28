@@ -5,6 +5,6 @@
    "baseline": "/home/rob/Documents/results/baseline-tests/baseline-test-50.csv",
    "kinship": "/home/rob/Documents/data/king_ibdseg_4th.seg",
    "pcs": "/home/rob/Documents/data/pcs_unrelated_maf05.txt",
-   "chr_range": "22",
+   "chr_range": "1-22",
    "estimator": "regular"
 }
